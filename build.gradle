@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { name = "forge"; url = "https://maven.minecraftforge.net/" }
+    }
+    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT' }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.0.0"
+group = "com.example.sandevistan"
+archivesBaseName = "cyberware-sandevistan"
+sourceCompatibility = targetCompatibility = '1.8'
+
+minecraft {
+    version = "1.12.2-14.23.5.2860"
+    runDir = "run"
+    mappings = "stable_39"
+}
+
+repositories {
+    mavenCentral()
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    // El jar de Cyberware esta reofuscado (nombres func_...), por eso deobfCompile
+    deobfCompile ':cyberware-1_12_2-0_2_11_29'
+}
+
+processResources {
+    inputs.property "version", project.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) { exclude 'mcmod.info' }
+}
